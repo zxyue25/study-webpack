@@ -19,6 +19,9 @@
   "dependencies": {},
   "devDependencies": {
     "css-loader": "^5.0.1",
+    "html-webpack-plugin": "^4.5.1",
+    "less": "^4.1.0",
+    "less-loader": "^7.3.0",
     "path": "^0.12.7",
     "style-loader": "^2.0.0",
     "webpack": "^5.11.1",
