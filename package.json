@@ -1,0 +1,27 @@
+{
+  "name": "study-webpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zxyue25/study-webpack.git"
+  },
+  "author": "zxyue25",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zxyue25/study-webpack/issues"
+  },
+  "homepage": "https://github.com/zxyue25/study-webpack#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "css-loader": "^5.0.1",
+    "path": "^0.12.7",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.11.1",
+    "webpack-cli": "^4.2.0"
+  }
+}
