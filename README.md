@@ -1,4 +1,4 @@
-### webpack的五个核心概念
+### **webpack的五个核心概念**
 
 1. entry：指示webpack以哪个文件作为入口起点开始打包，**分析构建内部依赖图**
 
@@ -15,14 +15,14 @@
 | development | 会将process.env.NODE_ENV的值设为development。启用 | 能让代码本地调试、运行的环境|
 | production | 会将process.env.NODE_ENV的值设置为production | 能让代码优化、上线运行的环境 |
 
-### 安装
+### **安装**
 ```
 npm install webpack webpack-cli -g
 npm install webpack webpack-cli -D //开发时依赖
 ```
-### 初体验
+### **初体验**
 
-### 打包样式资源
+### **打包样式资源**
 ./src/main.js
 ```javascript
 import from './index.css';  //新建样式资源并引入
@@ -94,7 +94,8 @@ module.exports = {
 ```
 在终端执行webpack，可以看到打包到的./dist/main.js中引入了index.css和index.less
 
-在./dist下新建index.html，因为目前还未处理html资源；引入打包后的main.js，在浏览器打开，可以看到样式效果生效
+
+在./dist下新建index.html，因为目前还未处理html资源；引入打包后的main.js
 ```html
 <!DOCTYPE html>
 <html>
@@ -106,11 +107,14 @@ module.exports = {
   <script src="main.js"></script></body>
 </html>
 ```
+在浏览器打开，可以看到样式效果生效，并且插入的css、less经过loader处理为style标签插入
+![alt 属性文本](https://raw.githubusercontent.com/zxyue25/my-img/master/study-webpack/css-loader.jpg)
 
-### 打包html资源
-``` javascript
+### **打包html资源**
 npm i html-webpack-plugin -D
 
+webpack.config.js
+``` javascript
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.export = {
     ...
@@ -124,13 +128,106 @@ module.export = {
 }
 ```
 
-单独配置new HtmlWebpackPlugin()和new HtmlWebpackPluign({template: './src/index.html' })分别在终端执行webpack，可以看到输出的./dist/index.html文件不一样】
+单独配置new HtmlWebpackPlugin()和new HtmlWebpackPluign({template: './src/index.html' })分别在终端执行webpack，可以看到输出的./dist/index.html文件不一样
 
-### 打包图片资源
+### **打包图片资源**
+index.html
+```html
+ <div class="code"></div>
+ <div class="vue"></div>
+```
+index.less
+```css
+.code{
+    background: url(./code.jpg) //42kb
+}
+.vue{
+    background: url(./vue.jpg) //6kb
+}
+```
+这时候在终端执行webpack会报错
+```javascript
+ERROR in ./src/code.jpg 1:0 ...
+```
+webpack.config.js
 
+npm i url-loader file-loader -D
+``` javascript
+module.export = {
+    ...
+    module: {
+        rules: [
+             ...
+            {
+                //处理图片资源
+                test: /\.(jpg|jpg|gif)$/,
+                //只要使用一个loader时，用loader声明，多个时，用use
+                loader: 'url-loader',
+                options: {
+                    // 图片大小小于8kb，会被base64处理
+                    // 优点：减少请求数量（减轻服务器压力）
+                    // 缺点：图片体积会变大，转换成base64字符串格式之后，所以大图片不转换成base64处理，小图片几kb影响不大（文件请求速度更慢）
+                    limit: 8 * 1024,
+                    // 给图片进行重命名
+                    // [hash:10]取图片的hash前10位
+                    // [ext]取文件原来扩展名
+                    name: '[hash:10].[ext]'
+                }
+            }
+            ...
+        ]
+    }
+}
+```
+再次执行webpack，可以打包后结果是一张图片，是code.jpg；vue.jpg被转成了base64
 
+![alt 属性文本](https://raw.githubusercontent.com/zxyue25/my-img/master/study-webpack/img-loader.jpg)
 
+#### 处理html中的img
+index.html
+```html
+<img src='./vue.jpg' />
+```
+直接执行webpack命令，打包结果如下
+```html
+<img src='./vue.jpg' />
+```
+打包后代码不变，打包结果没有vue.jpg，无法正常显示；默认处理不了html中的img图片，因为根本解析不到
 
+npm i html-loader -D 加入html-loader处理
+``` javascript
+module.export = {
+    ...
+    module: {
+        rules: [
+             ...
+            {
+                //处理html中图片资源 npm i html-loader -D
+                test: /\.html$/,
+                //处理html中的img，负责引入img，从而能被url-loader处理
+                loader: 'html-loader',
+            }
+            ...
+        ]
+    }
+}
+```
+webpack打包资源出现
+Automatic publicPath is not supported in this browser
+
+解决方法：
+在webpack.config.js文件中添加
+module.exports = { output: { publicPath: './' } }
+
+或者
+webpack打包html里面img后src为“[object Module]”问题，esModule默认为true，手动设置为false；可参考 https://www.jb51.net/article/176947.htm
+
+再次执行webpack命令，打包结果如下
+dist/index.html
+```html
+<img src="be82e5eef968f52d80753ec93eafa448.jpg" />
+```
+index.html和index.less都引入了vue.jpg但是最后只打包成一张图片
 
 
 
