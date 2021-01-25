@@ -76,6 +76,15 @@ module.exports = {
                 test: /\.html$/,
                 //处理html中的img，负责引入img，从而能被url-loader处理
                 loader: 'html-loader',
+            },
+            // 打包其他资源（除html、css、js之外的资源）比如字体文件
+            {
+                // 排除tml、css、js资源）
+                exclude: /\.(css|js|html)$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[hash:10].[ext]'
+                }
             }
         ],
     },

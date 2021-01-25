@@ -195,6 +195,8 @@ index.html
 打包后代码不变，打包结果没有vue.jpg，无法正常显示；默认处理不了html中的img图片，因为根本解析不到
 
 npm i html-loader -D 加入html-loader处理
+
+webpack.config.js
 ``` javascript
 module.export = {
     ...
@@ -228,6 +230,28 @@ dist/index.html
 <img src="be82e5eef968f52d80753ec93eafa448.jpg" />
 ```
 index.html和index.less都引入了vue.jpg但是最后只打包成一张图片
+### **打包其他资源（字体文件）**
+在iconfont下载字体文件在/src/font目录下
 
-
-
+main.js
+```javascript
+// 引入iconfont样式文件
+import './font/iconfont.css'
+```
+index.html
+```html
+ <span class="iconfont icon-dollar"></span>
+```
+webpack.config.js
+```javascript
+ // 打包其他资源（除html、css、js之外的资源）比如字体文件
+{
+    // 排除tml、css、js资源）
+    exclude: /\.(css|js|html)$/,
+    loader: 'file-loader',
+    options: {
+        name: '[hash:10].[ext]'
+    }
+}
+```
+执行webpack命令，在dist目录下可以看到打包的字体文件，打开dist/index.html可以看到引入的图标生效
