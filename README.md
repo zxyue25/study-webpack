@@ -255,3 +255,21 @@ webpack.config.js
 }
 ```
 执行webpack命令，在dist目录下可以看到打包的字体文件，打开dist/index.html可以看到引入的图标生效
+
+### **配置devServer**
+
+```javascript
+    // 开发服务器：用来自动化（自动编译，自动打开浏览器，自动刷新浏览器）
+    // 特点：没有输出，只会在内存中编译打包，不会有任何输出
+    // npx 想要解决的主要问题，就是调用项目内部安装的模块 http://www.ruanyifeng.com/blog/2019/02/npx.html
+    // 启动devserver的命令为：npx webpack-dev-server(webpack4)
+    // 启动devserver的命令为：npx webpack serve(webpack5)
+    // 原理：https://segmentfault.com/a/1190000006964335?utm_source=tag-newest
+    // npm i webpack-dev-server -D
+    devServer: {
+        contentBase: resolve(__dirname, 'dist'),// 项目构建后路径
+        compress: true,// 启动gzip压缩
+        port: 3000,// 端口号
+        open: true// 自动打开浏览器
+    },
+```
