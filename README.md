@@ -69,11 +69,11 @@ module.exports = {
             {
                 test: /\.css/,
                 use: [//使用哪些loader，执行顺序是从下至上；或者说从右到左，依次执行
+                    // npm i style-loader css-loader -D
                     // 创建style标签，将js中的样式资源插入到标签中，添加到head中生效
                     'style-loader',
                     // 将css文件变成commonjs模块加载js中，里面内容是样式字符串
                     'css-loader'
-                    // npm i style-loader css-loader -D
                 ],
             },
             {
@@ -273,3 +273,15 @@ webpack.config.js
         open: true// 自动打开浏览器
     },
 ```
+### **构建环境介绍**
+以上是开发环境的配置，mode: 'development'
+
+生产环境还需考虑的问题：
+
+1. css文件从js文件中提取出来：开发环境打包结果，字体文件和图片打包出独立的文件，目录由options.outputName决定，而css、less样式文件经过css-loader处理，变成common.js模块加载到js中，这样会造成js文件特别大，加载慢，且样式最终需要经过style-loader处理插到html中，会导致页面出现闪屏的问题
+2. 代码统一进行压缩
+3. 兼容性问题：样式、部分js，比如某些样式需要加前缀才能在低版本浏览器正常使用
+
+### **提取css成单独文件**
+
+
