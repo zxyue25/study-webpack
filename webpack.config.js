@@ -20,6 +20,8 @@ const { resolve } = require('path')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 module.exports = {
     mode: 'development',
     // webpack配置
@@ -42,7 +44,8 @@ module.exports = {
         filename: 'main.js',
         // 输出路径
         // __dirname nodejs的变量，代表当前文件的目录的绝对路径
-        path: resolve(__dirname, 'dist')
+        path: resolve(__dirname, 'dist'),
+        publicPath: '/'
     },
     // loader的配置
     module: {
@@ -52,7 +55,9 @@ module.exports = {
                 use: [//使用哪些loader，执行顺序是从下至上；或者说从右到左，依次执行
                     // npm i style-loader css-loader -D
                     // 创建style标签，将js中的样式资源插入到标签中，添加到head中生效
-                    'style-loader',
+                    // 'style-loader',
+                    // 取代style-loader，提取js中的css成单独文件
+                    MiniCssExtractPlugin.loader,
                     // 将css文件变成commonjs模块加载js中，里面内容是样式字符串
                     'css-loader'
                 ],
@@ -103,10 +108,16 @@ module.exports = {
         ],
     },
     plugins: [
-         //// 功能：默认会创建一个空的html文件，自动引入打包输出的所有资源（js/css）new HtmlWebpackPlugin()
-         new HtmlWebpackPluign({
+        //功能：默认会创建一个空的html文件，自动引入打包输出的所有资源（js/css）
+        // new HtmlWebpackPlugin()
+        new HtmlWebpackPlugin({
             // 复制'./src/index.html'文件，并自动引入打包输出的所有资源（js/css）
            template: './src/index.html'
+       }),
+       // new MiniCssExtractPlugin()
+       new MiniCssExtractPlugin({
+           filename: 'css/index.css' //指定提取css文件的在dist下的目录
        })
+
     ],
 }

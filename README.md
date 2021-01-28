@@ -283,5 +283,40 @@ webpack.config.js
 3. 兼容性问题：样式、部分js，比如某些样式需要加前缀才能在低版本浏览器正常使用
 
 ### **提取css成单独文件**
+npm i mini-css-extract-plugin -D
 
+webpack.config.js
+```javascript
+...
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
+module: {
+    rules:[
+          {
+            test: /\.css/,
+            use: [//使用哪些loader，执行顺序是从下至上；或者说从右到左，依次执行
+                // npm i style-loader css-loader -D
+                // 创建style标签，将js中的样式资源插入到标签中，添加到head中生效
+                // 'style-loader',
+                // 取代style-loader，提取js中的css成单独文件
+                MiniCssExtractPlugin.loader,
+                // 将css文件变成commonjs模块加载js中，里面内容是样式字符串
+                'css-loader'
+            ],
+        },
+    ]
+},
+plugins: [
+    // new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin({
+        filename: 'css/index.css' //指定提取css文件的在dist下的目录
+    })
+]
+```
+执行webpack，可以看到打包生成dist/css/index.css，dist/index.html中引入css文件
+```html
+<link href="/main.css" rel="stylesheet">
+```
+在浏览器打开index.html，可以看到如下
+![alt 属性文本](https://raw.githubusercontent.com/zxyue25/my-img/master/study-webpack/img-loader.jpg)
+样式通过link标签引入，不会有闪的问题
