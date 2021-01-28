@@ -118,6 +118,5 @@ module.exports = {
        new MiniCssExtractPlugin({
            filename: 'css/index.css' //指定提取css文件的在dist下的目录
        })
-
     ],
 }
