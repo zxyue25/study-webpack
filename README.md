@@ -69,11 +69,11 @@ module.exports = {
             {
                 test: /\.css/,
                 use: [//使用哪些loader，执行顺序是从下至上；或者说从右到左，依次执行
+                    // npm i style-loader css-loader -D
                     // 创建style标签，将js中的样式资源插入到标签中，添加到head中生效
                     'style-loader',
                     // 将css文件变成commonjs模块加载js中，里面内容是样式字符串
                     'css-loader'
-                    // npm i style-loader css-loader -D
                 ],
             },
             {
@@ -195,6 +195,8 @@ index.html
 打包后代码不变，打包结果没有vue.jpg，无法正常显示；默认处理不了html中的img图片，因为根本解析不到
 
 npm i html-loader -D 加入html-loader处理
+
+webpack.config.js
 ``` javascript
 module.export = {
     ...
@@ -228,6 +230,93 @@ dist/index.html
 <img src="be82e5eef968f52d80753ec93eafa448.jpg" />
 ```
 index.html和index.less都引入了vue.jpg但是最后只打包成一张图片
+### **打包其他资源（字体文件）**
+在iconfont下载字体文件在/src/font目录下
 
+main.js
+```javascript
+// 引入iconfont样式文件
+import './font/iconfont.css'
+```
+index.html
+```html
+ <span class="iconfont icon-dollar"></span>
+```
+webpack.config.js
+```javascript
+ // 打包其他资源（除html、css、js之外的资源）比如字体文件
+{
+    // 排除tml、css、js资源）
+    exclude: /\.(css|js|html)$/,
+    loader: 'file-loader',
+    options: {
+        name: '[hash:10].[ext]'
+    }
+}
+```
+执行webpack命令，在dist目录下可以看到打包的字体文件，打开dist/index.html可以看到引入的图标生效
 
+### **配置devServer**
 
+```javascript
+    // 开发服务器：用来自动化（自动编译，自动打开浏览器，自动刷新浏览器）
+    // 特点：没有输出，只会在内存中编译打包，不会有任何输出
+    // npx 想要解决的主要问题，就是调用项目内部安装的模块 http://www.ruanyifeng.com/blog/2019/02/npx.html
+    // 启动devserver的命令为：npx webpack-dev-server(webpack4)
+    // 启动devserver的命令为：npx webpack serve(webpack5)
+    // 原理：https://segmentfault.com/a/1190000006964335?utm_source=tag-newest
+    // npm i webpack-dev-server -D
+    devServer: {
+        contentBase: resolve(__dirname, 'dist'),// 项目构建后路径
+        compress: true,// 启动gzip压缩
+        port: 3000,// 端口号
+        open: true// 自动打开浏览器
+    },
+```
+### **构建环境介绍**
+以上是开发环境的配置，mode: 'development'
+
+生产环境还需考虑的问题：
+
+1. css文件从js文件中提取出来：开发环境打包结果，字体文件和图片打包出独立的文件，目录由options.outputName决定，而css、less样式文件经过css-loader处理，变成common.js模块加载到js中，这样会造成js文件特别大，加载慢，且样式最终需要经过style-loader处理插到html中，会导致页面出现闪屏的问题
+2. 代码统一进行压缩
+3. 兼容性问题：样式、部分js，比如某些样式需要加前缀才能在低版本浏览器正常使用
+
+### **提取css成单独文件**
+npm i mini-css-extract-plugin -D
+
+webpack.config.js
+```javascript
+...
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+module: {
+    rules:[
+          {
+            test: /\.css/,
+            use: [//使用哪些loader，执行顺序是从下至上；或者说从右到左，依次执行
+                // npm i style-loader css-loader -D
+                // 创建style标签，将js中的样式资源插入到标签中，添加到head中生效
+                // 'style-loader',
+                // 取代style-loader，提取js中的css成单独文件
+                MiniCssExtractPlugin.loader,
+                // 将css文件变成commonjs模块加载js中，里面内容是样式字符串
+                'css-loader'
+            ],
+        },
+    ]
+},
+plugins: [
+    // new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin({
+        filename: 'css/index.css' //指定提取css文件的在dist下的目录
+    })
+]
+```
+执行webpack，可以看到打包生成dist/css/index.css，dist/index.html中引入css文件
+```html
+<link href="/main.css" rel="stylesheet">
+```
+在浏览器打开index.html，可以看到如下
+![alt 属性文本](https://raw.githubusercontent.com/zxyue25/my-img/master/study-webpack/img-loader.jpg)
+样式通过link标签引入，不会有闪的问题

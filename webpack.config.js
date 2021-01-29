@@ -20,33 +20,50 @@ const { resolve } = require('path')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 module.exports = {
     mode: 'development',
     // webpack配置
     entry: './src/main.js',
+    // 开发服务器：用来自动化（自动编译，自动打开浏览器，自动刷新浏览器）
+    // 特点：没有输出，只会在内存中编译打包，不会有任何输出
+    // npx 想要解决的主要问题，就是调用项目内部安装的模块 http://www.ruanyifeng.com/blog/2019/02/npx.html
+    // 启动devserver的命令为：npx webpack-dev-server(webpack4)
+    // 启动devserver的命令为：npx webpack serve(webpack5)
+    // 原理：https://segmentfault.com/a/1190000006964335?utm_source=tag-newest
+    // npm i webpack-dev-server -D
+    devServer: {
+        contentBase: resolve(__dirname, 'dist'),// 项目构建后路径
+        compress: true,// 启动gzip压缩
+        port: 3000,// 端口号
+        open: true// 自动打开浏览器
+    },
     output: {
-        publicPath: '',
         // 文件名
         filename: 'main.js',
         // 输出路径
         // __dirname nodejs的变量，代表当前文件的目录的绝对路径
-        path: resolve(__dirname, 'dist')
+        path: resolve(__dirname, 'dist'),
+        publicPath: '/'
     },
     // loader的配置
     module: {
         rules: [
             {
-                test: /\.css$/,
+                test: /\.css/,
                 use: [//使用哪些loader，执行顺序是从下至上；或者说从右到左，依次执行
+                    // npm i style-loader css-loader -D
                     // 创建style标签，将js中的样式资源插入到标签中，添加到head中生效
-                    'style-loader',
+                    // 'style-loader',
+                    // 取代style-loader，提取js中的css成单独文件
+                    MiniCssExtractPlugin.loader,
                     // 将css文件变成commonjs模块加载js中，里面内容是样式字符串
                     'css-loader'
-                    // npm i style-loader css-loader -D
                 ],
             },
             {
-                test: /\.less$/,
+                test: /\.less/,
                 use: [
                     'style-loader',
                     'css-loader',
@@ -68,7 +85,8 @@ module.exports = {
                     // 给图片进行重命名
                     // [hash:10]取图片的hash前10位
                     // [ext]取文件原来扩展名
-                    name: '[hash:10].[ext]'
+                    name: '[hash:10].[ext]',
+                    outputPath: 'imgs'
                 }
             },
             {
@@ -76,18 +94,29 @@ module.exports = {
                 test: /\.html$/,
                 //处理html中的img，负责引入img，从而能被url-loader处理
                 loader: 'html-loader',
+            },
+             // 打包其他资源（除html、css、js之外的资源）比如字体文件
+            {
+                // 排除tml、css、js资源）
+                exclude: /\.(css|js|html)$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[hash:10].[ext]',
+                    outputPath: 'font'
+                }
             }
         ],
     },
     plugins: [
-        // html-webpack-plugin
-        // 功能：默认会创建一个空的html文件，自动引入打包输出的所有资源（js/css）new HtmlWebpackPlugin()
+        //功能：默认会创建一个空的html文件，自动引入打包输出的所有资源（js/css）
         // new HtmlWebpackPlugin()
-        // 需求：需要有结构的html文件 
         new HtmlWebpackPlugin({
             // 复制'./src/index.html'文件，并自动引入打包输出的所有资源（js/css）
-            template: './src/index.html'
-        })
-
+           template: './src/index.html'
+       }),
+       // new MiniCssExtractPlugin()
+       new MiniCssExtractPlugin({
+           filename: 'css/index.css' //指定提取css文件的在dist下的目录
+       })
     ],
 }
