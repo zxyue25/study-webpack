@@ -1,34 +1,40 @@
-### **webpack的五个核心概念**
+### **webpack 的五个核心概念**
 
-1. entry：指示webpack以哪个文件作为入口起点开始打包，**分析构建内部依赖图**
+1. entry：指示 webpack 以哪个文件作为入口起点开始打包，**分析构建内部依赖图**
 
-2. output：指示webpack打包后的资源bundles输出到哪里去，以及如何命名
+2. output：指示 webpack 打包后的资源 bundles 输出到哪里去，以及如何命名
 
-3. loader：让webpack能去处理那些非js文件（如css、html、img等），webpack自身只能理解js（js、json）
+3. loader：让 webpack 能去处理那些非 js 文件（如 css、html、img 等），webpack 自身只能理解 js（js、json）
 
 4. plugins：插件可以用于执行范围更广的任务，插件的范围包括，从打包到优化和压缩，一直到重新定义环境中的变量等
 
-5. mode：指示webpack使用相应模式模式的配置，webpack内置的两种模式如下：
+5. mode：指示 webpack 使用相应模式模式的配置，webpack 内置的两种模式如下：
 
-| 选项 | 描述 | 特点 |
-| -- | -- | -- |
-| development | 会将process.env.NODE_ENV的值设为development。启用 | 能让代码本地调试、运行的环境|
-| production | 会将process.env.NODE_ENV的值设置为production | 能让代码优化、上线运行的环境 |
+| 选项        | 描述                                                 | 特点                         |
+| ----------- | ---------------------------------------------------- | ---------------------------- |
+| development | 会将 process.env.NODE_ENV 的值设为 development。启用 | 能让代码本地调试、运行的环境 |
+| production  | 会将 process.env.NODE_ENV 的值设置为 production      | 能让代码优化、上线运行的环境 |
 
 ### **安装**
+
 ```
 npm install webpack webpack-cli -g
 npm install webpack webpack-cli -D //开发时依赖
 ```
+
 ### **初体验**
 
 ### **打包样式资源**
+
 ./src/main.js
+
 ```javascript
-import from './index.css';  //新建样式资源并引入
+import './index.css';  //新建样式资源并引入
 import './index.less'; //如果样式资源文件是空的，webpack配置没有处理less资源，在终端执行webpack打包，不会报错
 ```
-新建webpack.config.js
+
+新建 webpack.config.js
+
 ```javascript
 /*
 webpack.config.js webpack的配置文件
@@ -76,7 +82,7 @@ module.exports = {
                 use: [
                     'style-loader',
                     'css-loader',
-                    // 将less资源编译成css 
+                    // 将less资源编译成css
                     //npm i less less-loader -D
                     'less-loader'
                 ]
@@ -87,29 +93,34 @@ module.exports = {
 }
 }
 ```
-在终端执行webpack，可以看到打包到的./dist/main.js中引入了index.css和index.less
 
+在终端执行 webpack，可以看到打包到的./dist/main.js 中引入了 index.css 和 index.less
+在./dist 下新建 index.html，因为目前还未处理 html 资源；引入打包后的 main.js
 
-在./dist下新建index.html，因为目前还未处理html资源；引入打包后的main.js
 ```html
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Webpack App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"></head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
   <body>
-  <script src="main.js"></script></body>
+    <script src="main.js"></script>
+  </body>
 </html>
 ```
-在浏览器打开，可以看到样式效果生效，并且插入的css、less经过loader处理为style标签插入
+
+在浏览器打开，可以看到样式效果生效，并且插入的 css、less 经过 loader 处理为 style 标签插入
 ![alt 属性文本](https://raw.githubusercontent.com/zxyue25/my-img/master/study-webpack/css-loader.jpg)
 
-### **打包html资源**
+### **打包 html 资源**
+
 npm i html-webpack-plugin -D
 
 webpack.config.js
-``` javascript
+
+```javascript
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.export = {
     ...
@@ -123,31 +134,43 @@ module.export = {
 }
 ```
 
-单独配置new HtmlWebpackPlugin()和new HtmlWebpackPluign({template: './src/index.html' })分别在终端执行webpack，可以看到输出的./dist/index.html文件不一样
+单独配置 new HtmlWebpackPlugin()和 new HtmlWebpackPluign({template: './src/index.html' })分别在终端执行 webpack，可以看到输出的./dist/index.html 文件不一样
 
 ### **打包图片资源**
+
+#### 处理 css 中的 img
+
 index.html
+
 ```html
- <div class="code"></div>
- <div class="vue"></div>
+<div class="code"></div>
+<div class="vue"></div>
 ```
+
 index.less
+
 ```css
-.code{
-    background: url(./code.jpg) //42kb
+.code {
+  background: url(./code.jpg) //42kb
+;
 }
-.vue{
-    background: url(./vue.jpg) //6kb
+.vue {
+  background: url(./vue.jpg) //6kb
+;
 }
 ```
-这时候在终端执行webpack会报错
+
+这时候在终端执行 webpack 会报错
+
 ```javascript
 ERROR in ./src/code.jpg 1:0 ...
 ```
+
 webpack.config.js
 
 npm i url-loader file-loader -D
-``` javascript
+
+```javascript
 module.export = {
     ...
     module: {
@@ -174,25 +197,30 @@ module.export = {
     }
 }
 ```
-再次执行webpack，可以打包后结果是一张图片，是code.jpg；vue.jpg被转成了base64
+
+再次执行 webpack，可以打包后结果是一张图片，是 code.jpg；vue.jpg 被转成了 base64
 
 ![alt 属性文本](https://raw.githubusercontent.com/zxyue25/my-img/master/study-webpack/img-loader.jpg)
 
-#### 处理html中的img
+#### 处理 html 中的 img
+
 index.html
-```html
-<img src='./vue.jpg' />
-```
-直接执行webpack命令，打包结果如下
-```html
-<img src='./vue.jpg' />
-```
-打包后代码不变，打包结果没有vue.jpg，无法正常显示；默认处理不了html中的img图片，因为根本解析不到
 
-npm i html-loader -D 加入html-loader处理
+```html
+<img src="./vue.jpg" />
+```
 
+直接执行 webpack 命令，打包结果如下
+
+```html
+<img src="./vue.jpg" />
+```
+
+打包后代码不变，打包结果没有 vue.jpg，无法正常显示；默认处理不了 html 中的 img 图片，因为根本解析不到
+npm i html-loader -D 加入 html-loader 处理
 webpack.config.js
-``` javascript
+
+```javascript
 module.export = {
     ...
     module: {
@@ -209,39 +237,49 @@ module.export = {
     }
 }
 ```
-webpack打包资源出现
+
+webpack 打包资源出现
 Automatic publicPath is not supported in this browser
 
 解决方法：
-在webpack.config.js文件中添加
+在 webpack.config.js 文件中添加
 module.exports = { output: { publicPath: './' } }
 
 或者
-webpack打包html里面img后src为“[object Module]”问题，esModule默认为true，手动设置为false；可参考 https://www.jb51.net/article/176947.htm
+webpack 打包 html 里面 img 后 src 为“[object Module]”问题，esModule 默认为 true，手动设置为 false；可参考 https://www.jb51.net/article/176947.htm
 
-再次执行webpack命令，打包结果如下
+再次执行 webpack 命令，打包结果如下
 dist/index.html
+
 ```html
 <img src="be82e5eef968f52d80753ec93eafa448.jpg" />
 ```
-index.html和index.less都引入了vue.jpg但是最后只打包成一张图片
+
+index.html 和 index.less 都引入了 vue.jpg 但是最后只打包成一张图片
+
 ### **打包其他资源（字体文件）**
-在iconfont下载字体文件在/src/font目录下
+
+在 iconfont 下载字体文件在/src/font 目录下
 
 main.js
+
 ```javascript
 // 引入iconfont样式文件
-import './font/iconfont.css'
+import "./font/iconfont.css";
 ```
+
 index.html
+
 ```html
- <span class="iconfont icon-dollar"></span>
+<span class="iconfont icon-dollar"></span>
 ```
+
 webpack.config.js
+
 ```javascript
  // 打包其他资源（除html、css、js之外的资源）比如字体文件
 {
-    // 排除tml、css、js资源）
+    // 排除html、css、js资源）
     exclude: /\.(css|js|html)$/,
     loader: 'file-loader',
     options: {
@@ -249,9 +287,10 @@ webpack.config.js
     }
 }
 ```
-执行webpack命令，在dist目录下可以看到打包的字体文件，打开dist/index.html可以看到引入的图标生效
 
-### **配置devServer**
+执行 webpack 命令，在 dist 目录下可以看到打包的字体文件，打开 dist/index.html 可以看到引入的图标生效
+
+### **配置 devServer**
 
 ```javascript
     // 开发服务器：用来自动化（自动编译，自动打开浏览器，自动刷新浏览器）
@@ -268,19 +307,21 @@ webpack.config.js
         open: true// 自动打开浏览器
     },
 ```
+
 ### **构建环境介绍**
+
 以上是开发环境的配置，mode: 'development'
 
 生产环境还需考虑的问题：
-
-1. css文件从js文件中提取出来：开发环境打包结果，字体文件和图片打包出独立的文件，目录由options.outputName决定，而css、less样式文件经过css-loader处理，变成common.js模块加载到js中，这样会造成js文件特别大，加载慢，且样式最终需要经过style-loader处理插到html中，会导致页面出现闪屏的问题
+1. css 文件从 js 文件中提取出来：开发环境打包结果，字体文件和图片打包出独立的文件，目录由 options.outputName 决定，而 css、less 样式文件经过 css-loader 处理，变成 common.js 模块加载到 js 中，这样会造成 js 文件特别大，加载慢，且样式最终需要经过 style-loader 处理插到 html 中，会导致页面出现闪屏的问题
 2. 代码统一进行压缩
-3. 兼容性问题：样式、部分js，比如某些样式需要加前缀才能在低版本浏览器正常使用
+3. 兼容性问题：样式、部分 js，比如某些样式需要加前缀才能在低版本浏览器正常使用
 
-### **提取css成单独文件**
+### **提取 css 成单独文件**
+
 npm i mini-css-extract-plugin -D
-
 webpack.config.js
+
 ```javascript
 ...
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -308,10 +349,13 @@ plugins: [
     })
 ]
 ```
-执行webpack，可以看到打包生成dist/css/index.css，dist/index.html中引入css文件
+
+执行 webpack，可以看到打包生成 dist/css/index.css，dist/index.html 中引入 css 文件
+
 ```html
-<link href="/main.css" rel="stylesheet">
+<link href="/main.css" rel="stylesheet" />
 ```
-在浏览器打开index.html，可以看到如下
+
+在浏览器打开 index.html，可以看到如下
 ![alt 属性文本](https://raw.githubusercontent.com/zxyue25/my-img/master/study-webpack/img-loader.jpg)
-样式通过link标签引入，不会有闪的问题
+样式通过 link 标签引入，不会有闪的问题

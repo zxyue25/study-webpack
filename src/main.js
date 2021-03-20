@@ -24,7 +24,7 @@ main.js：webpack入口起点文件
 */
 
 import './index.css';
-// import './index.less'; //如果样式资源文件是空的，webpack配置没有处理less资源，在终端执行webpack打包，不会报错
+import './index.less'; //如果样式资源文件是空的，webpack配置没有处理less资源，在终端执行webpack打包，不会报错
 
 // 引入iconfont样式文件
 import './font/iconfont.css'
