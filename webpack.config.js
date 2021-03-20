@@ -17,11 +17,12 @@ webpack.config.js webpack的配置文件
  */
 
 // 设置node环境变量
-// process.env.NODE_ENV = "development";
+process.env.NODE_ENV = "development";
 
 const { resolve } = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCssAssetsWebpackPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -73,11 +74,7 @@ module.exports = {
               postcssOptions: {
                 //postcss的插件
                 //帮postcss找到package.json中browserlist里面的配置，可识别环境，通过配置加载指定的css兼容性样式
-                plugins: [
-                    [
-                        "postcss-preset-env"
-                    ]
-                ],
+                plugins: [["postcss-preset-env"]],
                 /*
                     "browserslist": {
                         // 开发环境 --> 设置node环境变量：process.env.NODE_ENV = "development"
@@ -155,5 +152,8 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "css/index.css", //指定提取css文件的在dist下的目录
     }),
+    // 压缩css
+    // npm i optimize-css-assets-webpack-plugin -D
+    // new OptimizeCssAssetsWebpackPlugin(),
   ],
 };

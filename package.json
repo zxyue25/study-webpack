@@ -16,7 +16,9 @@
     "url": "https://github.com/zxyue25/study-webpack/issues"
   },
   "homepage": "https://github.com/zxyue25/study-webpack#readme",
-  "dependencies": {},
+  "dependencies": {
+    "optimize-css-assets-webpack-plugin": "^5.0.4"
+  },
   "devDependencies": {
     "css-loader": "^5.0.1",
     "file-loader": "^6.2.0",
@@ -40,7 +42,7 @@
       "last 1 firefox version",
       "last 1 safari version"
     ],
-    "production":[
+    "production": [
       ">0.2%",
       "not dead",
       "not op_mini all"

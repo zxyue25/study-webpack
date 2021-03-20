@@ -456,3 +456,21 @@ body{
             backface-visibility: hidden;
 }
 ```
+
+### 12 压缩css(optimize-css-assets-webpack-plugin)
+npm i optimize-css-assets-webpack-plugin -D
+webpack.config.js
+```js
+const OptimizeCssAssetsWebpackPlugin = require("optimize-css-assets-webpack-plugin");
+...
+plugins: [
+    ...
+    // 压缩css
+    // npm i optimize-css-assets-webpack-plugin -D
+    new OptimizeCssAssetsWebpackPlugin(),
+]
+```
+执行 webpack，可以看到打包生成 dist/css/index.css已经被压缩，对比压缩前后css文件大小，从2.58kb变成2.34kb
+``` css
+body{height:100%;width:100%;background-color:red;display:flex;-webkit-backface-visibility:hidden;backface-visibility:hidden}@font-face{font-family:iconfont;src:url(/font/67b199ed6b.eot);src:url(/font/67b199ed6b.eot#iefix) format("embedded-opentype"),url("data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAASoAAsAAAAACXQAAARcAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDQAqFYIRbATYCJAMYCw4ABCAFhG0HZhsXCBEVpDmQfZFg207YPiRFXdMUDu9LHUnXRBC/9pt99+6+GN7EEvxIxxsekjZLEC00qIRMJpOKNS+Bn77TXqDZoDA0bU/Y9Cx9XVKZ9ntr0475da0wUXVMie3y0zPyz7PC5QO0jA1g0v7PMdOlRYHkt9lcMoLWtDfA8YAGFpG23YHcgRXIifoNY5cXeZ5A0wQjlHWfoChgy/RpgTjLz00HdsIgV5BDXV0VrM0QD8BQT/3USwDuvd+PP7AINkjKAvS5uzneWeD2JvvNP1qbqA2SHAQIh7OBbaJAH8jEZaHjAmhBoo+mKR9OtwqgqS5Jnzlv8t78evNPJAIYVhJJNuRoahv/8ihkpZCICnRFG2E3kyWf2Rabgs8cNpnPPEG18hfUCaj8B+skUA04pokPgBgDHdfnCAl92LykypSUEJeX4nJrgXjWJ42l/WROoIFD0KY/ba+9X5uUPtx2y0sKUMjccTlgIRMrvUyfHLxJaTeYOaAjc8fgCKV969aDurKUwtu3o2/dikJ3YgAFAbiJKHH3buwdys/hBlwsA3TY8YBMzkz70qB0du7sINkmlTU1VTnDSGs3Ym6svzlynWzubKZwZ3sjf+0hOTo+rE3AHZ6WHZSN5W04qsiYP5I0JcU1H4uitAsRmpFhzBKCQeksNLCxjZQmZpfahbHcqYhM8AafoHbVkzEzUeZu9VUSLGfvKCuqf17ln7Zs25PaCt/oK2Y+Nl7W85C5qirdmyf5P2smtlNPq/rA+4HXboo2mhZy7Gv3zph5gOhp2unTtGmD63Dte2h9KDLM1+3ibrdkr6hOxKphLFtFraXWr15dD6RUyIVyt1oHFyy4rVzp9gxE8eaio/rlNeWxq7OzK/b36Y+O0l4Lqpc8HGWFxyXl+xyVjVi/rOZ4f1LrpmXLyBzUHBXLWn4ORbDe/y38hvnQe/w2W41Wvg7jkb0Dkd+wALqPUn6csbRjOD7Zn6fB2z/GgUZTiDip0rf54ori124fU1dUn5iuvhYj86t5TmgC/aT0RL0GQHFAfQZAcUUN0iadUi8B/KOtpP75h/7G9fHrEqkCp99sgg7wavX1puf7R4dmCvgRlBoL/xhhw7asiHVjlaXWVoVAZSP2FQlNTfwpniFPhlKNNi4l1I1GkNSMQ6FuDpmxfSi1LEKlbgmaFvhubhlWATSROcC8bgBhwFZIul6gMOAyMmMfQ2nMZ6gM0GIJyjdOex6cw6oLYypYQPYHm1OnTbMov/yJZmhSjos92hfZ2TBEfphOP7BDHmKBG00sokEztXAHl2HTEPRMFebilyJ9EgS66J38nNqZcsFQSqACyPwBK0c62ukuVObnn5AxaKS4oqXM+YWYY/sHEV/YAPlQdI1aLmWwMzJiQmg8SWOkBe7QhhojQUBfPKqCcsJXdoj1EgHqpJsq/OlV7V3uAQDRD2BGaWOdz+aEmtOZuy2tE+K/Splp8grL3B3DQUPWoMfWlLI95LwWO5nNAA==") format("woff2"),url(/font/2bb59db229.woff) format("woff"),url(/font/a04a06a7d9.ttf) format("truetype"),url(/font/086b7e8295.svg#iconfont) format("svg")}.iconfont{font-family:iconfont!important;font-size:16px;font-style:normal;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.icon-dollar:before{content:"\e6f4"}.icon-history:before{content:"\e6f8"}.icon-arrow-down:before{content:"\e665"}.icon-arrow-double-right:before{content:"\e666"}.icon-comment:before{content:"\e668"}
+```
