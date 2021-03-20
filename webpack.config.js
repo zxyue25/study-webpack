@@ -16,10 +16,11 @@ webpack.config.js webpack的配置文件
 （配置文件采用common.js src下是es6）
  */
 
+// 设置node环境变量
+// process.env.NODE_ENV = "development";
+
 const { resolve } = require("path");
-
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
@@ -61,6 +62,41 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           // 将css文件变成commonjs模块加载js中，里面内容是样式字符串
           "css-loader",
+          /*
+          css 兼容性处理：postcss --> postcss-loader plugin:postcss-preset-env
+          */
+          //npm i postcss-loader postcss-preset-env -D
+          // 使用
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                //postcss的插件
+                //帮postcss找到package.json中browserlist里面的配置，可识别环境，通过配置加载指定的css兼容性样式
+                plugins: [
+                    [
+                        "postcss-preset-env"
+                    ]
+                ],
+                /*
+                    "browserslist": {
+                        // 开发环境 --> 设置node环境变量：process.env.NODE_ENV = "development"
+                        "development": [
+                            "last 1 chrome version",
+                            "last 1 firefox version",
+                            "last 1 safari version"
+                        ],
+                        // 生产环境：默认看生产环境 跟webpack.config.js mode无关
+                        "production":[
+                            ">0.2%",
+                            "not dead",
+                            "not op_mini all"
+                        ]
+                    }
+                */
+              },
+            },
+          },
         ],
       },
       {
@@ -98,7 +134,7 @@ module.exports = {
       },
       // 打包其他资源（除html、css、js之外的资源）比如字体文件
       {
-        // 排除tml、css、js资源）
+        // 排除html、css、js资源）
         exclude: /\.(css|js|html|less|jpg)$/,
         loader: "file-loader",
         options: {

@@ -359,3 +359,100 @@ plugins: [
 在浏览器打开 index.html，可以看到如下
 ![alt 属性文本](https://raw.githubusercontent.com/zxyue25/my-img/master/study-webpack/img-loader.jpg)
 样式通过 link 标签引入，不会有闪的问题
+
+### 11 css 兼容性处理(postcss)
+npm i postcss-loader postcss-preset-env -D
+webpack.config.js
+```js
+// 设置node环境变量
+process.env.NODE_ENV = "development";
+module: {
+    rules:[
+          {
+            test: /\.css/,
+            use: [
+                MiniCssExtractPlugin.loader,
+                'css-loader',
+                /*
+                css 兼容性处理：postcss --> postcss-loader plugin:postcss-preset-env
+                */
+                //npm i postcss-loader postcss-preset-env -D
+                // 使用
+                {
+                  loader: "postcss-loader",
+                  options: {
+                    postcssOptions: {
+                      //postcss的插件
+                      //帮postcss找到package.json中browserlist里面的配置，可识别环境，通过配置加载指定的css兼容性样式
+                      plugins: [
+                          [
+                              "postcss-preset-env"
+                          ]
+                      ],
+                      /*
+                          "browserslist": {
+                              // 开发环境 --> 设置node环境变量：process.env.NODE_ENV = "development"
+                              "development": [
+                                  "last 1 chrome version", //兼容chrome最近一个版本
+                                  "last 1 firefox version",
+                                  "last 1 safari version"
+                              ],
+                              // 生产环境：默认看生产环境 跟webpack.config.js mode无关
+                              "production":[
+                                  ">0.2%", //兼容99.8%的浏览器
+                                  "not dead", //兼容没有dead的浏览器
+                                  "not op_mini all"
+                              ]
+                          }
+                      */
+                    },
+                  },
+                },
+              ],
+          },
+    ]
+}
+```
+package.json
+```json
+ "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production":[
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  }
+```
+index.css
+```css
+body{
+    ...
+    display: flex;
+    backface-visibility: hidden;
+}
+```
+执行 webpack，可以看到打包生成 dist/css/index.css
+```css
+body{
+    ...
+    display: flex;
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+}
+```
+注释package.json中process.env.NODE_ENV = "development";
+执行 webpack，可以看到打包生成 dist/css/index.css
+```css
+body{
+    ...
+    display: -webkit-flex;
+    display: flex;
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+}
+```
