@@ -66,7 +66,7 @@ module.exports = {
           /*
           css 兼容性处理：postcss --> postcss-loader plugin:postcss-preset-env
           */
-          //npm i postcss-loader postcss-preset-env -D
+          // npm i postcss-loader postcss-preset-env -D
           // 使用
           {
             loader: "postcss-loader",
@@ -139,6 +139,37 @@ module.exports = {
           outputPath: "font",
         },
       },
+      {
+        /*
+            语法检查：eslint-loader eslint
+            检查自己写的代码，第三方库不用检查
+            设置检查规则：
+            方式一：在package.json中eslintConfig中设置
+            "eslintConfig": {
+                "extends": "airbnb-base"
+            }
+            方式二：
+            根目录新建.eslintrc
+            {
+                "extends": "airbnb-base"
+            }
+            推荐使用规则：airbnb
+            airbnb在eslint使用：
+            1. eslint-config-airbnb 包含react风格
+            2. eslint-config-airbnb-base 用这个
+            eslint-config-airbnb-base
+            Our default export contains all of our ESLint rules, including ECMAScript 6+. It requires eslint and eslint-plugin-import.
+            // eslint-disable-next-line
+         */
+        //  npm i eslint eslint-loader eslint-config-airbnb-base eslint-plugin-import -D
+        test: /\.js$/,
+        loader: "eslint-loader",
+        exclude: /node_modules/,
+        options: {
+            // 自动修复
+            fix: true
+        }
+      }
     ],
   },
   plugins: [
@@ -154,6 +185,6 @@ module.exports = {
     }),
     // 压缩css
     // npm i optimize-css-assets-webpack-plugin -D
-    // new OptimizeCssAssetsWebpackPlugin(),
+    new OptimizeCssAssetsWebpackPlugin(),
   ],
 };

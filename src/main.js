@@ -1,10 +1,8 @@
-
-
-/* 
+/*
 main.js：webpack入口起点文件
 
     1. 运行指令：webpack以 ./src/main.js 为入口文件打包，打包输出到 ./dist/main.js
-    开发环境：webpack ./src/main.js -o ./dist --mode=development 
+    开发环境：webpack ./src/main.js -o ./dist --mode=development
     生产环境：webpack ./src/main.js -o ./dist //默认是生产环境
     或者 webpack ./src/main.js -o ./dist --mode=production
 
@@ -24,14 +22,13 @@ main.js：webpack入口起点文件
 */
 
 import './index.css';
-import './index.less'; //如果样式资源文件是空的，webpack配置没有处理less资源，在终端执行webpack打包，不会报错
+import './index.less'; // 如果样式资源文件是空的，webpack配置没有处理less资源，在终端执行webpack打包，不会报错
 
 // 引入iconfont样式文件
-import './font/iconfont.css'
-console.log(data)
+import './font/iconfont.css';
 
-function add(x,y){
-    return x+y
+function add(x, y) {
+  return x + y;
 }
 
-console.log(add(3,9))
+console.log(add(3, 9));
