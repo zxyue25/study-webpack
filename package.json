@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run dev",
+    "dev": "webpack-dev-server --outputfile --progress --open --port=8001",
+    "build": "webpack --progress"
   },
   "repository": {
     "type": "git",
@@ -17,9 +19,14 @@
   },
   "homepage": "https://github.com/zxyue25/study-webpack#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "core-js": "^3.9.1",
     "optimize-css-assets-webpack-plugin": "^5.0.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",

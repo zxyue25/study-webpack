@@ -27,8 +27,16 @@ import './index.less'; // 如果样式资源文件是空的，webpack配置没�
 // 引入iconfont样式文件
 import './font/iconfont.css';
 
-function add(x, y) {
-  return x + y;
-}
+// import '@babel/polyfill';
 
+const add = (x, y) => x + y;
+
+const promise = new Promise((resolve) => {
+  setTimeout(() => {
+    console.log('定时器执行完了～');
+    resolve();
+  }, 1000);
+});
+
+console.log(promise);
 console.log(add(3, 9));
