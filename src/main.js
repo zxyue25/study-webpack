@@ -20,16 +20,15 @@ main.js：webpack入口起点文件
     生产环境比开发环境多了一个js压缩
 
 */
-
 import './index.css';
 import './index.less'; // 如果样式资源文件是空的，webpack配置没有处理less资源，在终端执行webpack打包，不会报错
-
 // 引入iconfont样式文件
-import './font/iconfont.css';
 
-// import '@babel/polyfill';
+import './font/iconfont.css'; // import '@babel/polyfill';
 
-const add = (x, y) => x + y;
+const add = function add(x, y) {
+  return x + y;
+};
 
 const promise = new Promise((resolve) => {
   setTimeout(() => {
@@ -37,6 +36,5 @@ const promise = new Promise((resolve) => {
     resolve();
   }, 1000);
 });
-
 console.log(promise);
 console.log(add(3, 9));

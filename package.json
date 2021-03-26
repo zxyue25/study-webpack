@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/zxyue25/study-webpack#readme",
   "dependencies": {
-    "@babel/polyfill": "^7.12.1",
     "core-js": "^3.9.1",
     "optimize-css-assets-webpack-plugin": "^5.0.4"
   },

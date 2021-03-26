@@ -26,6 +26,7 @@ const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plug
 
 module.exports = {
   mode: 'development',
+  // mode="production" //压缩js，生产环境自动压缩js代码，会启用自带的UglifyJsPlugin
   // webpack配置
   entry: './src/main.js',
   // 开发服务器：用来自动化（自动编译，自动打开浏览器，自动刷新浏览器）
@@ -139,38 +140,38 @@ module.exports = {
           outputPath: 'font',
         },
       },
-      {
-        /*
-            语法检查：eslint-loader eslint
-            检查自己写的代码，第三方库不用检查
-            设置检查规则：
-            方式一：在package.json中eslintConfig中设置
-            "eslintConfig": {
-                "extends": "airbnb-base"
-            }
-            方式二：
-            根目录新建.eslintrc
-            {
-                "extends": "airbnb-base"
-            }
-            推荐使用规则：airbnb
-            airbnb在eslint使用：
-            1. eslint-config-airbnb 包含react风格
-            2. eslint-config-airbnb-base 用这个
-            eslint-config-airbnb-base
-            Our default export contains all of our ESLint rules,
-            including ECMAScript 6+. It requires eslint and eslint-plugin-import.
-            // eslint-disable-next-line
-         */
-        //  npm i eslint eslint-loader eslint-config-airbnb-base eslint-plugin-import -D
-        test: /\.js$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/,
-        options: {
-          // 自动修复
-          fix: true,
-        },
-      },
+      // {
+      //   /*
+      //       语法检查：eslint-loader eslint
+      //       检查自己写的代码，第三方库不用检查
+      //       设置检查规则：
+      //       方式一：在package.json中eslintConfig中设置
+      //       "eslintConfig": {
+      //           "extends": "airbnb-base"
+      //       }
+      //       方式二：
+      //       根目录新建.eslintrc
+      //       {
+      //           "extends": "airbnb-base"
+      //       }
+      //       推荐使用规则：airbnb
+      //       airbnb在eslint使用：
+      //       1. eslint-config-airbnb 包含react风格
+      //       2. eslint-config-airbnb-base 用这个
+      //       eslint-config-airbnb-base
+      //       Our default export contains all of our ESLint rules,
+      //       including ECMAScript 6+. It requires eslint and eslint-plugin-import.
+      //       // eslint-disable-next-line
+      //    */
+      //   //  npm i eslint eslint-loader eslint-config-airbnb-base eslint-plugin-import -D
+      //   test: /\.js$/,
+      //   loader: 'eslint-loader',
+      //   exclude: /node_modules/,
+      //   options: {
+      //     // 自动修复
+      //     fix: true,
+      //   },
+      // },
       {
         /*
             js兼容性处理：babel-loader @babel/core @babel/preset-env
@@ -221,6 +222,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       // 复制'./src/index.html'文件，并自动引入打包输出的所有资源（js/css）
       template: './src/index.html',
+      // 压缩html
+      minify: {
+        // 移除空格
+        collapseWhitespace: true,
+        // 移除注释
+        removeComments: true,
+      },
     }),
     // new MiniCssExtractPlugin()
     new MiniCssExtractPlugin({
