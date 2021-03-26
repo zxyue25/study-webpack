@@ -17,12 +17,12 @@ webpack.config.js webpack的配置文件
  */
 
 // 设置node环境变量
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'development'
 
-const { resolve } = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const { resolve } = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 
 module.exports = {
   mode: 'development',
@@ -122,6 +122,7 @@ module.exports = {
           // [ext]取文件原来扩展名
           name: '[hash:10].[ext]',
           outputPath: 'imgs', // 构建后路径 /dist/imgs
+          esModule: false, // html中用的是common, url-loader中用的是es6，需要关掉
         },
       },
       {
@@ -167,6 +168,7 @@ module.exports = {
       //   test: /\.js$/,
       //   loader: 'eslint-loader',
       //   exclude: /node_modules/,
+      //   enforce: 'pre',
       //   options: {
       //     // 自动修复
       //     fix: true,
@@ -189,7 +191,8 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        options: { // 或者在.babelrc babel.config.json 中配置
+        options: {
+          // 或者在.babelrc babel.config.json 中配置
           // 预设，指定babel做这样的兼容性处理
           presets: [
             [
@@ -238,4 +241,4 @@ module.exports = {
     // npm i optimize-css-assets-webpack-plugin -D
     new OptimizeCssAssetsWebpackPlugin(),
   ],
-};
+}
