@@ -37,6 +37,8 @@ module.exports = {
   // 原理：https://segmentfault.com/a/1190000006964335?utm_source=tag-newest
   // npm i webpack-dev-server -D
   target: 'web', //自动更新
+  devtool: 'source-map', //一种提供源代码到构建后代码映射技术，作用：如果构建代码错了，通过映射关系可以追踪到原代码错误
+  // 可配置项 [inline-|hidden-|eval-][nosources][cheap-[module-]]source-map
   devServer: {
     contentBase: resolve(__dirname, 'dist'), // 项目构建后路径
     compress: true, // 启动gzip压缩
