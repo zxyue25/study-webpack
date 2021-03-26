@@ -26,6 +26,8 @@ import './index.less'; // 如果样式资源文件是空的，webpack配置没�
 
 import './font/iconfont.css'; // import '@babel/polyfill';
 
+// import './print.js'
+
 const add = function add(x, y) {
   return x + y;
 };
@@ -38,3 +40,12 @@ const promise = new Promise((resolve) => {
 });
 console.log(promise);
 console.log(add(3, 9));
+
+// if(module.hot){
+//     // 一旦module.hot为true，说明开启了hotHMR功能 --> 让HMR功能代码生效
+//     module.hot.accept('./print.js', function(){
+//         // 方法会监听print.js文件，一旦发生变化，其他模块不会重新打包构建
+//         // 会执行后面的回调函数
+//         print()
+//     })
+// }
