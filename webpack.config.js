@@ -28,7 +28,13 @@ module.exports = {
   mode: 'development',
   // mode="production" //压缩js，生产环境自动压缩js代码，会启用自带的UglifyJsPlugin
   // webpack配置
+  // 单入口
   entry: './src/main.js',
+  // 多入口，有一个入口，最终输出就有一个bundle
+  // entry: {
+  //   main: "./src/main.js",
+  //   print: "./src/print.js"
+  // },
   // 开发服务器：用来自动化（自动编译，自动打开浏览器，自动刷新浏览器）
   // 特点：没有输出，只会在内存中编译打包，不会有任何输出
   // npx 想要解决的主要问题，就是调用项目内部安装的模块 http://www.ruanyifeng.com/blog/2019/02/npx.html
@@ -69,7 +75,7 @@ module.exports = {
         • contenthash：根据文件的内容生成hash值，不同文件hash值一定不一样，只有改变的文件会重新生成hash值，没变的不会
     */
     filename: 'main.[contenthash:10].js', //文件资源缓存处理 'main.[chunkhash:10].js' || 'main.[hash:10].js'
-
+    // filename: '[name].[contenthash:10].js', //多入口
     // 输出路径
     // __dirname nodejs的变量，代表当前文件的目录的绝对路径
     path: resolve(__dirname, 'dist'),
@@ -267,4 +273,14 @@ module.exports = {
     // npm i optimize-css-assets-webpack-plugin -D
     new OptimizeCssAssetsWebpackPlugin(),
   ],
+  optimization: {
+     /*
+      作用
+      1. 可以将node_modules中代码单独打包成一个chunk最终输出
+      2. 自动分析多入口文件中有没有公共的依赖文件，如果有，回单独打包成一个chunk，而不是每个文件都去打包一次
+    */
+    splitChunks: {
+      // chunks: 'all'
+    }
+  }
 }
