@@ -55,7 +55,21 @@ module.exports = {
   },
   output: {
     // 文件名
-    filename: 'main.js',
+    // filename: 'main.js',
+    //
+    /* 
+      • babel缓存：cacheDirectory --> 让第二次打包构建速度更快
+       生产环境下，文件变化时读取缓存
+      • 文件资源缓存：hash --> 让代码上线运行缓存更好使用
+        • hash：每次webpack构建时会生成一个唯一的hash值
+          • 问题：因为js和css同时使用一个hash值，如果重新打包就会导致所有的缓存失效（仅改变一个文件）
+        • chunkhash：根据chunk生成hash值，如果打包来源于同一个chunk，那么hash值一样
+          • 问题：css和js的hash值还是一样
+            • 因为css是在js中引入的，所以同属一个chunk
+        • contenthash：根据文件的内容生成hash值，不同文件hash值一定不一样，只有改变的文件会重新生成hash值，没变的不会
+    */
+    filename: 'main.[contenthash:10].js', //文件资源缓存处理 'main.[chunkhash:10].js' || 'main.[hash:10].js'
+
     // 输出路径
     // __dirname nodejs的变量，代表当前文件的目录的绝对路径
     path: resolve(__dirname, 'dist'),
@@ -246,7 +260,8 @@ module.exports = {
     }),
     // new MiniCssExtractPlugin()
     new MiniCssExtractPlugin({
-      filename: 'css/index.css', // 指定提取css文件的在dist下的目录
+      // filename: 'css/index.css', // 指定提取css文件的在dist下的目录
+      filename: 'css/index.[contenthash:10].css', // 文件资源缓存处理 'css/index.[hash:10].css' || 'css/index.[hash]:10].css'
     }),
     // 压缩css
     // npm i optimize-css-assets-webpack-plugin -D

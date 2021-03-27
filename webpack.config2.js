@@ -68,6 +68,7 @@ module.exports = {
               },
             ],
           ],
+          cacheDirectory: true, // 开启babel缓存，第二次构建时，读取缓存，加快速度
         },
       },
       {
