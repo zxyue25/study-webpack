@@ -17,13 +17,16 @@ webpack.config.js webpack的配置文件
  */
 
 // 设置node环境变量
-process.env.NODE_ENV = 'development'
+process.env.NODE_ENV = 'production'
 
 const { resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 // const workboxWebpackPlugin = require('workbox-webpack-plugin')
+const webpack = require("webpack")
+const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin')
+
 module.exports = {
   mode: 'development',
   // mode="production" //压缩js，生产环境自动压缩js代码，会启用自带的UglifyJsPlugin
@@ -257,12 +260,12 @@ module.exports = {
       // 复制'./src/index.html'文件，并自动引入打包输出的所有资源（js/css）
       template: './src/index.html',
       // 压缩html
-      minify: {
-        // 移除空格
-        collapseWhitespace: true,
-        // 移除注释
-        removeComments: true,
-      },
+      // minify: {
+      //   // 移除空格
+      //   collapseWhitespace: true,
+      //   // 移除注释
+      //   removeComments: true,
+      // },
     }),
     // new MiniCssExtractPlugin()
     new MiniCssExtractPlugin({
@@ -285,6 +288,17 @@ module.exports = {
     //   clientsClaim: true,
     //   skipWaiting: true
     // })
+
+    // dll
+    // 告诉webpack哪些库不参与打包。同时使用时的名称也得变
+    new webpack.DllReferencePlugin({
+      manifest: resolve(__dirname, 'dll/manifest.json')
+    }),
+    // npm i add-asset-html-webpack-plugin -D
+    // 将某个文件打包输出出去，并在html中自动引入该资源
+    new AddAssetHtmlWebpackPlugin({
+      filepath: resolve(__dirname, 'dll/jquery.js')
+    })
   ],
   optimization: {
      /*
