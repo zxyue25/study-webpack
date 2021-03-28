@@ -67,3 +67,24 @@ import(/* webpackChunkName: 'print' */'./print')
   .catch( () => {
     console.log('文件加载失败')
   })
+
+
+document.getElementById('btn').onclick = function(){
+  /*
+    懒加载：当文件需要使用时才加载
+      问题：但当文件较大时，不合适，加载时间太长，导致用户等待，这时候考虑预加载
+    预加载：配置webpackPrefetch: true；prefetch：会在使用之前，提前加载js文件
+      问题：兼容性不好
+    正常加载 && 预加载
+      正常加载：并行加载，同一时间加载多个文件，浏览器一个域名下统一时间只能并行加载最多6个文件，超过需往后排队
+      预加载：等其他资源加载完毕后，浏览器空闲后再加载
+  */
+  
+  import(/* webpackChunkName: 'test', webpackPrefetch: true */'./test')
+  .then(() => {
+    console.log('记载test.js成功')
+  })
+  .catch(() => {
+    console.log('文件加载失败')
+  })
+}
