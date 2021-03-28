@@ -88,3 +88,23 @@ document.getElementById('btn').onclick = function(){
     console.log('文件加载失败')
   })
 }
+
+// PWA 注册serviceworker
+// 注意 sw代码必须运行在服务器上 npm i serve -g；serve -s dist 启动服务器，将dist目录暴露出去
+// 处理兼容性问题
+// if('serviceWorker' in navigator){
+//   window.addEventListener('load', () => {
+//     navigator.serviceWorker.register('/service-worker.js')
+//     .then( () => {
+//       console.log('sw注册成功')
+//     })
+//     .catch( () => {
+//       console.log('sw注册失败')
+//     })
+//   })
+// }
+
+// externals
+import $ from 'jquery'
+
+console.log($)

@@ -23,7 +23,7 @@ const { resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
-
+// const workboxWebpackPlugin = require('workbox-webpack-plugin')
 module.exports = {
   mode: 'development',
   // mode="production" //压缩js，生产环境自动压缩js代码，会启用自带的UglifyJsPlugin
@@ -272,6 +272,19 @@ module.exports = {
     // 压缩css
     // npm i optimize-css-assets-webpack-plugin -D
     new OptimizeCssAssetsWebpackPlugin(),
+
+    // PWA
+    // npm i workbox-webpack-plugin -D
+    // new workboxWebpackPlugin.GenerateSW({
+    //   /*
+    //     1. 帮助serviceworker快速启动
+    //     2. 删除旧的serviceworker
+
+    //     生成一个 serviceworker 配置文件，需要通过配置文件注册serviceworker
+    //    */
+    //   clientsClaim: true,
+    //   skipWaiting: true
+    // })
   ],
   optimization: {
      /*
@@ -282,5 +295,9 @@ module.exports = {
     splitChunks: {
       // chunks: 'all'
     }
+  },
+  externals: {
+    // 拒绝jquery被打包进来；需要在index.html cdn引入             
+    jquery: 'jQuery' // 包名
   }
 }
