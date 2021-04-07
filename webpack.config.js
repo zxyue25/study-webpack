@@ -241,4 +241,15 @@ module.exports = {
     // npm i optimize-css-assets-webpack-plugin -D
     new OptimizeCssAssetsWebpackPlugin(),
   ],
+  // 解析模块规则
+  resolve: {
+    // 配置解析模块路径别名:简写路径
+    alias: {
+      $css: resolve(__dirname, 'src/css'),
+    },
+    // 配置省略文件路径的后缀名
+    extensions: ['.js', '.json', '.css'],
+    // 告诉webpack解析模块是去找哪个目录，默认去当前路径层级找，找不到找上一层级的
+    modules: [resolve(__dirname, '../../node_modules'), 'node_modules'], //先找第一个，再找第二个，防止第一个找不到
+  },
 }
