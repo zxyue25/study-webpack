@@ -17,18 +17,27 @@ webpack.config.js webpack的配置文件
  */
 
 // 设置node环境变量
-process.env.NODE_ENV = 'development'
+process.env.NODE_ENV = 'production'
 
 const { resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+// const workboxWebpackPlugin = require('workbox-webpack-plugin')
+const webpack = require("webpack")
+const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin')
 
 module.exports = {
   mode: 'development',
   // mode="production" //压缩js，生产环境自动压缩js代码，会启用自带的UglifyJsPlugin
   // webpack配置
+  // 单入口
   entry: './src/main.js',
+  // 多入口，有一个入口，最终输出就有一个bundle
+  // entry: {
+  //   main: "./src/main.js",
+  //   print: "./src/print.js"
+  // },
   // 开发服务器：用来自动化（自动编译，自动打开浏览器，自动刷新浏览器）
   // 特点：没有输出，只会在内存中编译打包，不会有任何输出
   // npx 想要解决的主要问题，就是调用项目内部安装的模块 http://www.ruanyifeng.com/blog/2019/02/npx.html
@@ -36,15 +45,40 @@ module.exports = {
   // 启动devserver的命令为：npx webpack serve(webpack5)
   // 原理：https://segmentfault.com/a/1190000006964335?utm_source=tag-newest
   // npm i webpack-dev-server -D
+  target: 'web', //自动更新
+  devtool: 'source-map', //一种提供源代码到构建后代码映射技术，作用：如果构建代码错了，通过映射关系可以追踪到原代码错误
+  // 可配置项 [inline-|hidden-|eval-][nosources][cheap-[module-]]source-map
   devServer: {
     contentBase: resolve(__dirname, 'dist'), // 项目构建后路径
-    compress: true, // 启动gzip压缩∏
+    compress: true, // 启动gzip压缩
     port: 3000, // 端口号
     open: true, // 自动打开浏览器
+    hot: true, //热模块替换
+    // hot module replacement 热模块替换 / 模块热替换
+    // 作用：一个模块发生变化，只会重新打包这一个模块，而不是重新打包所有模块，极大的提升构建速度
+    // • 样式文件：可以使用HMR功能，因为style-loader内部实现了
+    // • js文件：默认没有HMR功能，重新打包所有模块
+    // • 注意：HMR功能对js处理，只能处理非入口文件，因为入口文件引入了全部内容，入口文件变化，其他文件变化
+    // • html文件：默认没有HMR功能，同时会导致问题：html文件不能热更新（不需要做HMR功能）
+    // • 解决：修改entry入口，将html文件引入
   },
   output: {
     // 文件名
-    filename: 'main.js',
+    // filename: 'main.js',
+    //
+    /* 
+      • babel缓存：cacheDirectory --> 让第二次打包构建速度更快
+       生产环境下，文件变化时读取缓存
+      • 文件资源缓存：hash --> 让代码上线运行缓存更好使用
+        • hash：每次webpack构建时会生成一个唯一的hash值
+          • 问题：因为js和css同时使用一个hash值，如果重新打包就会导致所有的缓存失效（仅改变一个文件）
+        • chunkhash：根据chunk生成hash值，如果打包来源于同一个chunk，那么hash值一样
+          • 问题：css和js的hash值还是一样
+            • 因为css是在js中引入的，所以同属一个chunk
+        • contenthash：根据文件的内容生成hash值，不同文件hash值一定不一样，只有改变的文件会重新生成hash值，没变的不会
+    */
+    filename: 'main.[contenthash:10].js', //文件资源缓存处理 'main.[chunkhash:10].js' || 'main.[hash:10].js'
+    // filename: '[name].[contenthash:10].js', //多入口
     // 输出路径
     // __dirname nodejs的变量，代表当前文件的目录的绝对路径
     path: resolve(__dirname, 'dist'),
@@ -226,20 +260,45 @@ module.exports = {
       // 复制'./src/index.html'文件，并自动引入打包输出的所有资源（js/css）
       template: './src/index.html',
       // 压缩html
-      minify: {
-        // 移除空格
-        collapseWhitespace: true,
-        // 移除注释
-        removeComments: true,
-      },
+      // minify: {
+      //   // 移除空格
+      //   collapseWhitespace: true,
+      //   // 移除注释
+      //   removeComments: true,
+      // },
     }),
     // new MiniCssExtractPlugin()
     new MiniCssExtractPlugin({
-      filename: 'css/index.css', // 指定提取css文件的在dist下的目录
+      // filename: 'css/index.css', // 指定提取css文件的在dist下的目录
+      filename: 'css/index.[contenthash:10].css', // 文件资源缓存处理 'css/index.[hash:10].css' || 'css/index.[hash]:10].css'
     }),
     // 压缩css
     // npm i optimize-css-assets-webpack-plugin -D
     new OptimizeCssAssetsWebpackPlugin(),
+
+    // PWA
+    // npm i workbox-webpack-plugin -D
+    // new workboxWebpackPlugin.GenerateSW({
+    //   /*
+    //     1. 帮助serviceworker快速启动
+    //     2. 删除旧的serviceworker
+
+    //     生成一个 serviceworker 配置文件，需要通过配置文件注册serviceworker
+    //    */
+    //   clientsClaim: true,
+    //   skipWaiting: true
+    // })
+
+    // dll
+    // 告诉webpack哪些库不参与打包。同时使用时的名称也得变
+    new webpack.DllReferencePlugin({
+      manifest: resolve(__dirname, 'dll/manifest.json')
+    }),
+    // npm i add-asset-html-webpack-plugin -D
+    // 将某个文件打包输出出去，并在html中自动引入该资源
+    new AddAssetHtmlWebpackPlugin({
+      filepath: resolve(__dirname, 'dll/jquery.js')
+    })
   ],
   // 解析模块规则
   resolve: {

@@ -25,6 +25,7 @@
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
+    "add-asset-html-webpack-plugin": "^3.2.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
     "eslint": "^7.22.0",
@@ -34,6 +35,7 @@
     "file-loader": "^6.2.0",
     "html-loader": "^1.3.2",
     "html-webpack-plugin": "^4.5.1",
+    "jquery": "^3.6.0",
     "less": "^4.1.0",
     "less-loader": "^7.2.1",
     "mini-css-extract-plugin": "^1.3.4",
@@ -41,10 +43,12 @@
     "postcss-loader": "^5.2.0",
     "postcss-preset-env": "^6.7.0",
     "style-loader": "^2.0.0",
+    "thread-loader": "^3.0.1",
     "url-loader": "^4.1.1",
     "webpack": "^5.11.1",
     "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.1"
+    "webpack-dev-server": "^3.11.1",
+    "workbox-webpack-plugin": "^6.1.2"
   },
   "browserslist": {
     "development": [
@@ -57,5 +61,16 @@
       "not dead",
       "not op_mini all"
     ]
+<<<<<<< HEAD
   }
+=======
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base"
+  },
+  "sideEffects": [
+    "*.css",
+    "*.less"
+  ]
+>>>>>>> c9f131476674a1940e21a9c14c7ef45ac8999a46
 }

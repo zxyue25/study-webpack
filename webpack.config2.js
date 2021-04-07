@@ -1,3 +1,4 @@
+//生产环境配置
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
@@ -67,6 +68,7 @@ module.exports = {
               },
             ],
           ],
+          cacheDirectory: true, // 开启babel缓存，第二次构建时，读取缓存，加快速度
         },
       },
       {
