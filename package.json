@@ -61,9 +61,6 @@
       "not dead",
       "not op_mini all"
     ]
-<<<<<<< HEAD
-  }
-=======
   },
   "eslintConfig": {
     "extends": "airbnb-base"
@@ -72,5 +69,4 @@
     "*.css",
     "*.less"
   ]
->>>>>>> c9f131476674a1940e21a9c14c7ef45ac8999a46
 }

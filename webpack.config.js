@@ -17,15 +17,15 @@ webpack.config.js webpack的配置文件
  */
 
 // 设置node环境变量
-process.env.NODE_ENV = 'production'
+process.env.NODE_ENV = 'production';
 
-const { resolve } = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+const { resolve } = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 // const workboxWebpackPlugin = require('workbox-webpack-plugin')
-const webpack = require("webpack")
-const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin')
+const webpack = require('webpack');
+const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -45,15 +45,15 @@ module.exports = {
   // 启动devserver的命令为：npx webpack serve(webpack5)
   // 原理：https://segmentfault.com/a/1190000006964335?utm_source=tag-newest
   // npm i webpack-dev-server -D
-  target: 'web', //自动更新
-  devtool: 'source-map', //一种提供源代码到构建后代码映射技术，作用：如果构建代码错了，通过映射关系可以追踪到原代码错误
+  target: 'web', // 自动更新
+  devtool: 'source-map', // 一种提供源代码到构建后代码映射技术，作用：如果构建代码错了，通过映射关系可以追踪到原代码错误
   // 可配置项 [inline-|hidden-|eval-][nosources][cheap-[module-]]source-map
   devServer: {
     contentBase: resolve(__dirname, 'dist'), // 项目构建后路径
     compress: true, // 启动gzip压缩
     port: 3000, // 端口号
     open: true, // 自动打开浏览器
-    hot: true, //热模块替换
+    hot: true, // 热模块替换
     // hot module replacement 热模块替换 / 模块热替换
     // 作用：一个模块发生变化，只会重新打包这一个模块，而不是重新打包所有模块，极大的提升构建速度
     // • 样式文件：可以使用HMR功能，因为style-loader内部实现了
@@ -66,7 +66,7 @@ module.exports = {
     // 文件名
     // filename: 'main.js',
     //
-    /* 
+    /*
       • babel缓存：cacheDirectory --> 让第二次打包构建速度更快
        生产环境下，文件变化时读取缓存
       • 文件资源缓存：hash --> 让代码上线运行缓存更好使用
@@ -77,7 +77,7 @@ module.exports = {
             • 因为css是在js中引入的，所以同属一个chunk
         • contenthash：根据文件的内容生成hash值，不同文件hash值一定不一样，只有改变的文件会重新生成hash值，没变的不会
     */
-    filename: 'main.[contenthash:10].js', //文件资源缓存处理 'main.[chunkhash:10].js' || 'main.[hash:10].js'
+    filename: 'main.[contenthash:10].js', // 文件资源缓存处理 'main.[chunkhash:10].js' || 'main.[hash:10].js'
     // filename: '[name].[contenthash:10].js', //多入口
     // 输出路径
     // __dirname nodejs的变量，代表当前文件的目录的绝对路径
@@ -292,13 +292,13 @@ module.exports = {
     // dll
     // 告诉webpack哪些库不参与打包。同时使用时的名称也得变
     new webpack.DllReferencePlugin({
-      manifest: resolve(__dirname, 'dll/manifest.json')
+      manifest: resolve(__dirname, 'dll/manifest.json'),
     }),
     // npm i add-asset-html-webpack-plugin -D
     // 将某个文件打包输出出去，并在html中自动引入该资源
     new AddAssetHtmlWebpackPlugin({
-      filepath: resolve(__dirname, 'dll/jquery.js')
-    })
+      filepath: resolve(__dirname, 'dll/jquery.js'),
+    }),
   ],
   // 解析模块规则
   resolve: {
@@ -309,6 +309,6 @@ module.exports = {
     // 配置省略文件路径的后缀名
     extensions: ['.js', '.json', '.css'],
     // 告诉webpack解析模块是去找哪个目录，默认去当前路径层级找，找不到找上一层级的
-    modules: [resolve(__dirname, '../../node_modules'), 'node_modules'], //先找第一个，再找第二个，防止第一个找不到
+    modules: [resolve(__dirname, '../../node_modules'), 'node_modules'], // 先找第一个，再找第二个，防止第一个找不到
   },
-}
+};
