@@ -1,6 +1,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const HappyPack = require('happy-pack')
+const HappyPack = require('happy-pack') // 并行编译
 const path = require('path')
+const webpack = require('webpack')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -67,6 +68,33 @@ module.exports = {
             }
         ]
     },
+    plugins: [
+        new HappyPack({
+            id: 'happy-babel-js',
+            loaders: [{
+                loader: 'babel-loader',
+                options: {
+                    cacheDirectory: true,
+                    babelrc: false,
+                    presets: [
+                        [
+                            '@babel/env',
+                            {
+                                
+                            }
+                        ]
+                    ]
+                }
+            }]
+
+        }),
+
+        new webpack.DefinePlugin({
+           'process.env':{
+               isProduction
+           }
+        })
+    ],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'src')
